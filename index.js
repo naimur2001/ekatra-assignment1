@@ -17,9 +17,10 @@ app.listen(port,()=>{
   console.log(`Server's Port is : ${port}`)
 
  })
-
+// json file parsing to read data from file
 const datas=JSON.parse(fs.readFileSync("Data.json","utf-8"));
 
+//read todo list
 app.get("/todos",  (rer,res)=>{
   try {
      res.send(datas)
@@ -40,7 +41,24 @@ res.send(newData)
   res.send({message:error.message})
 }
 })
-
+//update todo list
+app.put("/todos/put/:id",(req,res)=>{
+  try {
+    const id=req.params.id;
+    const updateData=req.body;
+    const targetId=datas.findIndex(data=>data.id === id)
+    if (targetId !== -1) {
+      datas[targetId] = { ...datas[targetId], ...updateData };
+      saveToFile()
+      res.send(datas[targetId]);
+    } else {
+      res.status(404).json({ error: 'Todo not found' });
+    }
+  } catch (error) {
+    console.log(error.message);
+  res.send({message:error.message})
+  }
+})
 
 //writting in json file function
 const saveToFile=()=>{
