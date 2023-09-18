@@ -1,5 +1,4 @@
 const express=require("express");
-
 const cron=require("node-cron");
 const app=express();
 const fs=require("fs");
@@ -46,7 +45,7 @@ app.put("/todos/put/:id",(req,res)=>{
   try {
     const id=req.params.id;
     const updateData=req.body;
-    const targetId=datas.findIndex(data=>data.id === id)
+    const targetId=datas.findIndex(todo=>todo.id === id)
     if (targetId !== -1) {
       datas[targetId] = { ...datas[targetId], ...updateData };
       saveToFile()
@@ -59,7 +58,28 @@ app.put("/todos/put/:id",(req,res)=>{
   res.send({message:error.message})
   }
 })
+app.delete("/todos/delete/:id", (req,res)=>{
+  try {
+    const id=req.params.id;
+    const targetId = datas.findIndex(todo => todo.id === id);
+  if (targetId !== -1) {
+    datas.splice(targetId, 1);
+    saveToFile
+    res.sendStatus(201);
+  } else {
+    res.status(404).json({ error: 'Todo not found' });
+  }
+  } catch (error) {
+    console.log(error.message);
+    res.send({message:error.message})
+  }
+})
 
+cron.schedule('0 0 * * *', () => {
+  datas = datas.filter(todo => !todo.completed);
+saveToFile()
+  console.log('Deleted completed todos.');
+});
 //writting in json file function
 const saveToFile=()=>{
   fs.writeFileSync('Data.json', JSON.stringify(datas, null, 2), 'utf8');
