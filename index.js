@@ -17,3 +17,14 @@ app.listen(port,()=>{
   console.log(`Server's Port is : ${port}`)
 
  })
+
+const datas=JSON.parse(fs.readFileSync("Data.json","utf-8"));
+
+app.get("/todos", async (rer,res)=>{
+  try {
+     res.send(datas)
+  } catch (error) {
+    console.log(error.message);
+    res.send({message:error.message})
+  }
+})
