@@ -19,6 +19,7 @@ saveToFile()
 * To Delete data we use this --> api "/todos/delete/:id"
 * ---> Delete api is for if we want to delete any to do data after or before ou work done we can delete our to do data.
 
+* Above function i used cron job in my code to delete completed to do data at specifice time. And '0 0 * * *' 
 # problem faced
 * * I am new with cron job / node cron. I took help from internet to find cron job problem. And it is not so dificult i found. I think i tried best to solve the assignment based on cron job. 
 
